@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	free_table(char **table, size_t size)
+void	free_stable(char **table, size_t size)
 {
 	size_t i;
 
@@ -15,7 +15,7 @@ void	free_table(char **table, size_t size)
 	free(table);
 }
 
-void	free_envp(char **envp)
+void	free_table(char **table)
 {
 	size_t i;
 
@@ -24,10 +24,10 @@ void	free_envp(char **envp)
 		return ;
 	while (envp[i] != NULL)
 	{
-		free(envp[i]);
+		free(table[i]);
 		i++;
 	}
-	free(envp);
+	free(table);
 }
 
 char **minishell_start(char **envp)
@@ -47,7 +47,7 @@ char **minishell_start(char **envp)
 		if (!(envp_cpy[i] = 
 			(char*)malloc(sizeof(char) * (strlen(envp[i]) + 1))))
 		{
-			free_table(envp_cpy, i);
+			free_stable(envp_cpy, i);
 			return (NULL);
 		}
 		strcpy(envp_cpy[i], envp[i]);
@@ -62,7 +62,7 @@ void minishell()
 	char *command;
 	char **command_table;
 
-	while (0)
+	while (1)
 	{
 		write(STDOUT_FILENO, "$>", 2);
 		get_next_line(STDIN_FILENO, &command);
@@ -71,7 +71,7 @@ void minishell()
 		for (int i = 0; command_table[i] != NULL; i++)
 			printf("%d: [%s]\n", i+1, command_table[i]);
 		free(command);
-		free_envp(command_table);
+		free_table(command_table);
 	}
 }
 
